@@ -609,7 +609,7 @@ export default function SalesDashboard() {
       <div className="dash-header">
         <div className="dash-title-group">
           <div className="dash-title">
-            <span style={{ fontSize: "28px", marginRight: "2px" }}>🍑</span> Sunset Sales Dashboard
+            <span style={{ fontSize: "28px", marginRight: "2px" }}></span> Sunset Sales Dashboard
             {usingLive && <span className="live-tag">● Live data</span>}
           </div>
           <div className="dash-subtitle">get_sales_dashboard · Supabase RPC</div>
