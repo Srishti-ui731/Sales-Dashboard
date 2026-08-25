@@ -516,7 +516,6 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           background: rgba(0, 0, 0, 0.02);
           border-color: var(--panel-border);
         }
-
         @media (max-width: 768px) {
           .dash-root {
             padding: 20px;

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState, useMemo, useEffect } from "react";
-=======
-import React, { useState, useMemo } from "react";
->>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -118,13 +114,10 @@ function shortDate(d) {
   const dt = new Date(d);
   return dt.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
 }
-<<<<<<< HEAD
 function getYearMonth(dateStr) {
   if (!dateStr) return "";
   return dateStr.slice(0, 7); // Returns 'YYYY-MM'
 }
-=======
->>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
 
 function KpiCard({ label, value, sub, deltaPct }) {
   const up = deltaPct !== null && deltaPct !== undefined && deltaPct >= 0;
@@ -193,7 +186,6 @@ export default function SalesDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [usingLive, setUsingLive] = useState(false);
-<<<<<<< HEAD
   const [selectedDate, setSelectedDate] = useState("");
 
   const data = raw[0];
@@ -279,15 +271,6 @@ export default function SalesDashboard() {
     () => pctChange(calculatedKpi.TODAY_REVENUE, calculatedKpi.PMSD_REVENUE),
     [calculatedKpi]
   );
-=======
-
-  const data = raw[0];
-
-  const kpi = data.kpi_cards[0];
-  const salesDelta = useMemo(() => pctChange(kpi.MTD_REVENUE, kpi.PM_REVENUE), [kpi]);
-  const salesCountDelta = useMemo(() => pctChange(kpi.mtd_sales, kpi.PM_SALES), [kpi]);
-  const todayVsPmsd = useMemo(() => pctChange(kpi.TODAY_REVENUE, kpi.PMSD_REVENUE), [kpi]);
->>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
 
   const monthlyChartData = useMemo(
     () =>
@@ -307,7 +290,6 @@ export default function SalesDashboard() {
     [data]
   );
 
-<<<<<<< HEAD
   const leaderboardSorted = useMemo(() => {
     const rawKpi = data.kpi_cards[0];
     const metrics = data.daily_metrics || [];
@@ -361,12 +343,6 @@ export default function SalesDashboard() {
 
     return reps.sort((a, b) => b.mtd_revenue - a.mtd_revenue);
   }, [data, selectedDate, maxDate]);
-=======
-  const leaderboardSorted = useMemo(
-    () => [...data.leaderboard_metrics].sort((a, b) => b.mtd_revenue - a.mtd_revenue),
-    [data]
-  );
->>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
 
   async function fetchLive() {
     setLoading(true);
@@ -745,7 +721,6 @@ export default function SalesDashboard() {
           font-weight: 600;
         }
 
-<<<<<<< HEAD
         .filter-row {
           background: var(--panel);
           border: 1px solid var(--panel-border);
@@ -817,9 +792,6 @@ export default function SalesDashboard() {
           background: rgba(0, 0, 0, 0.02);
           border-color: var(--panel-border);
         }
-
-=======
->>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
         @media (max-width: 768px) {
           .dash-root {
             padding: 20px;
@@ -839,11 +811,7 @@ export default function SalesDashboard() {
       <div className="dash-header">
         <div className="dash-title-group">
           <div className="dash-title">
-<<<<<<< HEAD
             <span style={{ fontSize: "28px", marginRight: "2px" }}>🍑</span> Sunset Sales Dashboard
-=======
-            <span style={{ fontSize: "28px", marginRight: "2px" }}></span> Sunset Sales Dashboard
->>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
             {usingLive && <span className="live-tag">● Live data</span>}
           </div>
           <div className="dash-subtitle">get_sales_dashboard · Supabase RPC</div>
@@ -854,7 +822,6 @@ export default function SalesDashboard() {
         </button>
       </div>
 
-<<<<<<< HEAD
       <div className="filter-row">
         <div className="filter-group">
           <span className="filter-label">Select Date:</span>
@@ -884,9 +851,6 @@ export default function SalesDashboard() {
           </button>
         </div>
       </div>
-
-=======
->>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
       {showSettings && (
         <div className="settings-panel">
           <input
@@ -907,25 +871,16 @@ export default function SalesDashboard() {
       )}
 
       <div className="kpi-row">
-<<<<<<< HEAD
         <KpiCard label="MTD Sales" value={fmtNum(calculatedKpi.mtd_sales)} sub={`Prev month: ${fmtNum(calculatedKpi.PM_SALES)}`} deltaPct={salesCountDelta} />
         <KpiCard label="MTD Revenue" value={fmtINR(calculatedKpi.MTD_REVENUE)} sub={`Prev month: ${fmtINR(calculatedKpi.PM_REVENUE)}`} deltaPct={salesDelta} />
         <KpiCard label="Today's Sales" value={fmtNum(calculatedKpi.TODAY_SALES)} sub="orders today" />
         <KpiCard label="Today's Revenue" value={fmtINR(calculatedKpi.TODAY_REVENUE)} sub={`vs same day last month`} deltaPct={todayVsPmsd} />
         <KpiCard label="Prev Month Same Day" value={fmtNum(calculatedKpi.PMSD_SALES)} sub={fmtINR(calculatedKpi.PMSD_REVENUE)} />
-=======
-        <KpiCard label="MTD Sales" value={fmtNum(kpi.mtd_sales)} sub={`Prev month: ${fmtNum(kpi.PM_SALES)}`} deltaPct={salesCountDelta} />
-        <KpiCard label="MTD Revenue" value={fmtINR(kpi.MTD_REVENUE)} sub={`Prev month: ${fmtINR(kpi.PM_REVENUE)}`} deltaPct={salesDelta} />
-        <KpiCard label="Today's Sales" value={fmtNum(kpi.TODAY_SALES)} sub="orders today" />
-        <KpiCard label="Today's Revenue" value={fmtINR(kpi.TODAY_REVENUE)} sub={`vs same day last month`} deltaPct={todayVsPmsd} />
-        <KpiCard label="Prev Month Same Day" value={fmtNum(kpi.PMSD_SALES)} sub={fmtINR(kpi.PMSD_REVENUE)} />
->>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
       </div>
 
       <div className="panel">
         <div className="panel-title">Daily Sales & Revenue — May 2026</div>
         <ResponsiveContainer width="100%" height={280}>
-<<<<<<< HEAD
           <ComposedChart
             data={dailyChartData}
             margin={{ top: 5, right: 10, left: -10, bottom: 0 }}
@@ -938,16 +893,12 @@ export default function SalesDashboard() {
               }
             }}
           >
-=======
-          <ComposedChart data={dailyChartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
->>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
             <CartesianGrid strokeDasharray="3 3" stroke={PEACH.gridColor} vertical={false} />
             <XAxis dataKey="label" tick={{ fill: PEACH.textDim, fontSize: 11 }} interval={2} axisLine={{ stroke: PEACH.panelBorder }} tickLine={false} />
             <YAxis yAxisId="left" tick={{ fill: PEACH.textDim, fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis yAxisId="right" orientation="right" tick={{ fill: PEACH.textDim, fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
             <Tooltip content={<CustomTooltip money />} />
             <Legend wrapperStyle={{ fontSize: 12, color: PEACH.textDim, paddingTop: 10 }} />
-<<<<<<< HEAD
             <Bar yAxisId="left" dataKey="no_of_sales" name="Orders" fill={PEACH.accent} radius={[4, 4, 0, 0]} barSize={14}>
               {dailyChartData.map((entry, index) => {
                 const isSelected = entry.order_date === selectedDate;
@@ -960,9 +911,6 @@ export default function SalesDashboard() {
                 );
               })}
             </Bar>
-=======
-            <Bar yAxisId="left" dataKey="no_of_sales" name="Orders" fill={PEACH.accent} radius={[4, 4, 0, 0]} barSize={14} />
->>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
             <Line yAxisId="right" type="monotone" dataKey="total_revenue" name="Revenue" stroke={PEACH.accent2} strokeWidth={2.5} dot={false} />
           </ComposedChart>
         </ResponsiveContainer>
