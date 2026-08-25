@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import React, { useState, useMemo, useEffect } from "react";
+=======
 import React, { useState, useMemo } from "react";
+>>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -114,6 +118,13 @@ function shortDate(d) {
   const dt = new Date(d);
   return dt.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
 }
+<<<<<<< HEAD
+function getYearMonth(dateStr) {
+  if (!dateStr) return "";
+  return dateStr.slice(0, 7); // Returns 'YYYY-MM'
+}
+=======
+>>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
 
 function KpiCard({ label, value, sub, deltaPct }) {
   const up = deltaPct !== null && deltaPct !== undefined && deltaPct >= 0;
@@ -182,6 +193,93 @@ export default function SalesDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [usingLive, setUsingLive] = useState(false);
+<<<<<<< HEAD
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const data = raw[0];
+
+  const { minDate, maxDate } = useMemo(() => {
+    const metrics = data?.daily_metrics || [];
+    if (metrics.length === 0) return { minDate: "", maxDate: "" };
+    let min = metrics[0].order_date;
+    let max = metrics[0].order_date;
+    for (let i = 1; i < metrics.length; i++) {
+      const d = metrics[i].order_date;
+      if (d < min) min = d;
+      if (d > max) max = d;
+    }
+    return { minDate: min, maxDate: max };
+  }, [data]);
+
+  useEffect(() => {
+    if (maxDate) {
+      setSelectedDate(maxDate);
+    }
+  }, [maxDate]);
+
+  const calculatedKpi = useMemo(() => {
+    const rawKpi = data.kpi_cards[0];
+    const metrics = data.daily_metrics || [];
+    
+    // TODAY_SALES & TODAY_REVENUE
+    const todayRecord = metrics.find((m) => m.order_date === selectedDate);
+    const TODAY_SALES = todayRecord ? todayRecord.no_of_sales : 0;
+    const TODAY_REVENUE = todayRecord ? todayRecord.total_revenue : 0;
+    
+    // MTD_SALES & MTD_REVENUE for selectedDate
+    const selYearMonth = getYearMonth(selectedDate);
+    let MTD_SALES = 0;
+    let MTD_REVENUE = 0;
+    metrics.forEach((m) => {
+      if (getYearMonth(m.order_date) === selYearMonth && m.order_date <= selectedDate) {
+        MTD_SALES += m.no_of_sales;
+        MTD_REVENUE += m.total_revenue;
+      }
+    });
+
+    // MTD_SALES & MTD_REVENUE for maxDate (latest available date in the month)
+    let mtdSalesLatest = 0;
+    let mtdRevenueLatest = 0;
+    metrics.forEach((m) => {
+      if (getYearMonth(m.order_date) === selYearMonth && m.order_date <= maxDate) {
+        mtdSalesLatest += m.no_of_sales;
+        mtdRevenueLatest += m.total_revenue;
+      }
+    });
+
+    // Ratios
+    const salesRatio = mtdSalesLatest > 0 ? MTD_SALES / mtdSalesLatest : 0;
+    const revenueRatio = mtdRevenueLatest > 0 ? MTD_REVENUE / mtdRevenueLatest : 0;
+
+    // PMSD
+    const PMSD_SALES = Math.round(rawKpi.PMSD_SALES * salesRatio);
+    const PMSD_REVENUE = rawKpi.PMSD_REVENUE * revenueRatio;
+
+    return {
+      mtd_sales: MTD_SALES,
+      MTD_REVENUE: MTD_REVENUE,
+      PM_SALES: rawKpi.PM_SALES,
+      PM_REVENUE: rawKpi.PM_REVENUE,
+      TODAY_SALES,
+      TODAY_REVENUE,
+      PMSD_SALES,
+      PMSD_REVENUE,
+    };
+  }, [data, selectedDate, maxDate]);
+
+  const salesDelta = useMemo(
+    () => pctChange(calculatedKpi.MTD_REVENUE, calculatedKpi.PM_REVENUE),
+    [calculatedKpi]
+  );
+  const salesCountDelta = useMemo(
+    () => pctChange(calculatedKpi.mtd_sales, calculatedKpi.PM_SALES),
+    [calculatedKpi]
+  );
+  const todayVsPmsd = useMemo(
+    () => pctChange(calculatedKpi.TODAY_REVENUE, calculatedKpi.PMSD_REVENUE),
+    [calculatedKpi]
+  );
+=======
 
   const data = raw[0];
 
@@ -189,6 +287,7 @@ export default function SalesDashboard() {
   const salesDelta = useMemo(() => pctChange(kpi.MTD_REVENUE, kpi.PM_REVENUE), [kpi]);
   const salesCountDelta = useMemo(() => pctChange(kpi.mtd_sales, kpi.PM_SALES), [kpi]);
   const todayVsPmsd = useMemo(() => pctChange(kpi.TODAY_REVENUE, kpi.PMSD_REVENUE), [kpi]);
+>>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
 
   const monthlyChartData = useMemo(
     () =>
@@ -208,10 +307,66 @@ export default function SalesDashboard() {
     [data]
   );
 
+<<<<<<< HEAD
+  const leaderboardSorted = useMemo(() => {
+    const rawKpi = data.kpi_cards[0];
+    const metrics = data.daily_metrics || [];
+
+    // TODAY_SALES & TODAY_REVENUE
+    const todayRecord = metrics.find((m) => m.order_date === selectedDate);
+    const TODAY_SALES = todayRecord ? todayRecord.no_of_sales : 0;
+    const TODAY_REVENUE = todayRecord ? todayRecord.total_revenue : 0;
+
+    // MTD_SALES & MTD_REVENUE for selectedDate
+    const selYearMonth = getYearMonth(selectedDate);
+    let MTD_SALES = 0;
+    let MTD_REVENUE = 0;
+    metrics.forEach((m) => {
+      if (getYearMonth(m.order_date) === selYearMonth && m.order_date <= selectedDate) {
+        MTD_SALES += m.no_of_sales;
+        MTD_REVENUE += m.total_revenue;
+      }
+    });
+
+    // MTD_SALES & MTD_REVENUE for maxDate (latest available date in the month)
+    let mtdSalesLatest = 0;
+    let mtdRevenueLatest = 0;
+    metrics.forEach((m) => {
+      if (getYearMonth(m.order_date) === selYearMonth && m.order_date <= maxDate) {
+        mtdSalesLatest += m.no_of_sales;
+        mtdRevenueLatest += m.total_revenue;
+      }
+    });
+
+    // Ratios
+    const salesRatio = mtdSalesLatest > 0 ? MTD_SALES / mtdSalesLatest : 0;
+    const revenueRatio = mtdRevenueLatest > 0 ? MTD_REVENUE / mtdRevenueLatest : 0;
+
+    // Leaderboard overall share calculation
+    const totalRawRepMtdSales = data.leaderboard_metrics.reduce((acc, r) => acc + r.mtd_sales, 0);
+    const totalRawRepMtdRevenue = data.leaderboard_metrics.reduce((acc, r) => acc + r.mtd_revenue, 0);
+
+    const reps = data.leaderboard_metrics.map((r) => {
+      const salesShare = totalRawRepMtdSales > 0 ? r.mtd_sales / totalRawRepMtdSales : 0;
+      const revenueShare = totalRawRepMtdRevenue > 0 ? r.mtd_revenue / totalRawRepMtdRevenue : 0;
+
+      return {
+        ...r,
+        mtd_sales: Math.round(r.mtd_sales * salesRatio),
+        mtd_revenue: r.mtd_revenue * revenueRatio,
+        today_sales: Math.round(TODAY_SALES * salesShare),
+        today_revenue: TODAY_REVENUE * revenueShare,
+      };
+    });
+
+    return reps.sort((a, b) => b.mtd_revenue - a.mtd_revenue);
+  }, [data, selectedDate, maxDate]);
+=======
   const leaderboardSorted = useMemo(
     () => [...data.leaderboard_metrics].sort((a, b) => b.mtd_revenue - a.mtd_revenue),
     [data]
   );
+>>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
 
   async function fetchLive() {
     setLoading(true);
@@ -590,6 +745,81 @@ export default function SalesDashboard() {
           font-weight: 600;
         }
 
+<<<<<<< HEAD
+        .filter-row {
+          background: var(--panel);
+          border: 1px solid var(--panel-border);
+          border-radius: 20px;
+          padding: 16px 24px;
+          margin-bottom: 32px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 16px;
+          box-shadow: var(--card-shadow);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .filter-group {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .filter-label {
+          font-size: 13px;
+          font-weight: 700;
+          color: var(--text-dim);
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+        .date-input {
+          background: rgba(255, 255, 255, 0.9);
+          border: 1px solid var(--panel-border-hover);
+          color: var(--text);
+          padding: 10px 16px;
+          border-radius: 16px;
+          font-size: 13px;
+          font-weight: 600;
+          outline: none;
+          transition: all 0.2s ease;
+          font-family: inherit;
+        }
+        .date-input:focus {
+          border-color: var(--accent);
+          box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        .btn-group {
+          display: flex;
+          gap: 10px;
+        }
+        .filter-btn {
+          background: var(--panel);
+          border: 1px solid var(--panel-border-hover);
+          color: var(--text);
+          padding: 10px 18px;
+          border-radius: 16px;
+          cursor: pointer;
+          font-size: 12px;
+          font-weight: 700;
+          transition: all 0.2s ease;
+        }
+        .filter-btn:hover:not(:disabled) {
+          background: var(--accent-glow);
+          border-color: var(--accent);
+          color: var(--accent);
+          transform: translateY(-1px);
+        }
+        .filter-btn:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+          background: rgba(0, 0, 0, 0.02);
+          border-color: var(--panel-border);
+        }
+
+=======
+>>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
         @media (max-width: 768px) {
           .dash-root {
             padding: 20px;
@@ -609,7 +839,11 @@ export default function SalesDashboard() {
       <div className="dash-header">
         <div className="dash-title-group">
           <div className="dash-title">
+<<<<<<< HEAD
+            <span style={{ fontSize: "28px", marginRight: "2px" }}>🍑</span> Sunset Sales Dashboard
+=======
             <span style={{ fontSize: "28px", marginRight: "2px" }}></span> Sunset Sales Dashboard
+>>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
             {usingLive && <span className="live-tag">● Live data</span>}
           </div>
           <div className="dash-subtitle">get_sales_dashboard · Supabase RPC</div>
@@ -620,6 +854,39 @@ export default function SalesDashboard() {
         </button>
       </div>
 
+<<<<<<< HEAD
+      <div className="filter-row">
+        <div className="filter-group">
+          <span className="filter-label">Select Date:</span>
+          <input
+            type="date"
+            className="date-input"
+            value={selectedDate || ""}
+            min={minDate}
+            max={maxDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
+        </div>
+        <div className="btn-group">
+          <button
+            className="filter-btn"
+            disabled={!selectedDate || selectedDate === minDate}
+            onClick={() => setSelectedDate(minDate)}
+          >
+            Start of Month
+          </button>
+          <button
+            className="filter-btn"
+            disabled={!selectedDate || selectedDate === maxDate}
+            onClick={() => setSelectedDate(maxDate)}
+          >
+            Latest Date
+          </button>
+        </div>
+      </div>
+
+=======
+>>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
       {showSettings && (
         <div className="settings-panel">
           <input
@@ -640,24 +907,62 @@ export default function SalesDashboard() {
       )}
 
       <div className="kpi-row">
+<<<<<<< HEAD
+        <KpiCard label="MTD Sales" value={fmtNum(calculatedKpi.mtd_sales)} sub={`Prev month: ${fmtNum(calculatedKpi.PM_SALES)}`} deltaPct={salesCountDelta} />
+        <KpiCard label="MTD Revenue" value={fmtINR(calculatedKpi.MTD_REVENUE)} sub={`Prev month: ${fmtINR(calculatedKpi.PM_REVENUE)}`} deltaPct={salesDelta} />
+        <KpiCard label="Today's Sales" value={fmtNum(calculatedKpi.TODAY_SALES)} sub="orders today" />
+        <KpiCard label="Today's Revenue" value={fmtINR(calculatedKpi.TODAY_REVENUE)} sub={`vs same day last month`} deltaPct={todayVsPmsd} />
+        <KpiCard label="Prev Month Same Day" value={fmtNum(calculatedKpi.PMSD_SALES)} sub={fmtINR(calculatedKpi.PMSD_REVENUE)} />
+=======
         <KpiCard label="MTD Sales" value={fmtNum(kpi.mtd_sales)} sub={`Prev month: ${fmtNum(kpi.PM_SALES)}`} deltaPct={salesCountDelta} />
         <KpiCard label="MTD Revenue" value={fmtINR(kpi.MTD_REVENUE)} sub={`Prev month: ${fmtINR(kpi.PM_REVENUE)}`} deltaPct={salesDelta} />
         <KpiCard label="Today's Sales" value={fmtNum(kpi.TODAY_SALES)} sub="orders today" />
         <KpiCard label="Today's Revenue" value={fmtINR(kpi.TODAY_REVENUE)} sub={`vs same day last month`} deltaPct={todayVsPmsd} />
         <KpiCard label="Prev Month Same Day" value={fmtNum(kpi.PMSD_SALES)} sub={fmtINR(kpi.PMSD_REVENUE)} />
+>>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
       </div>
 
       <div className="panel">
         <div className="panel-title">Daily Sales & Revenue — May 2026</div>
         <ResponsiveContainer width="100%" height={280}>
+<<<<<<< HEAD
+          <ComposedChart
+            data={dailyChartData}
+            margin={{ top: 5, right: 10, left: -10, bottom: 0 }}
+            onClick={(chartState) => {
+              if (chartState && chartState.activePayload && chartState.activePayload[0]) {
+                const clickedDate = chartState.activePayload[0].payload.order_date;
+                if (clickedDate) {
+                  setSelectedDate(clickedDate);
+                }
+              }
+            }}
+          >
+=======
           <ComposedChart data={dailyChartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
+>>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
             <CartesianGrid strokeDasharray="3 3" stroke={PEACH.gridColor} vertical={false} />
             <XAxis dataKey="label" tick={{ fill: PEACH.textDim, fontSize: 11 }} interval={2} axisLine={{ stroke: PEACH.panelBorder }} tickLine={false} />
             <YAxis yAxisId="left" tick={{ fill: PEACH.textDim, fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis yAxisId="right" orientation="right" tick={{ fill: PEACH.textDim, fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
             <Tooltip content={<CustomTooltip money />} />
             <Legend wrapperStyle={{ fontSize: 12, color: PEACH.textDim, paddingTop: 10 }} />
+<<<<<<< HEAD
+            <Bar yAxisId="left" dataKey="no_of_sales" name="Orders" fill={PEACH.accent} radius={[4, 4, 0, 0]} barSize={14}>
+              {dailyChartData.map((entry, index) => {
+                const isSelected = entry.order_date === selectedDate;
+                return (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={isSelected ? PEACH.accent : "rgba(226, 92, 62, 0.35)"}
+                    style={{ cursor: "pointer" }}
+                  />
+                );
+              })}
+            </Bar>
+=======
             <Bar yAxisId="left" dataKey="no_of_sales" name="Orders" fill={PEACH.accent} radius={[4, 4, 0, 0]} barSize={14} />
+>>>>>>> 55e248a651a65d8055018a5a1ceffad258296460
             <Line yAxisId="right" type="monotone" dataKey="total_revenue" name="Revenue" stroke={PEACH.accent2} strokeWidth={2.5} dot={false} />
           </ComposedChart>
         </ResponsiveContainer>
